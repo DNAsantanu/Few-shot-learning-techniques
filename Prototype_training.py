@@ -94,30 +94,11 @@ def proto_train(data_list, encoder, optimizer, n_episodes=500, k_shot=1,q_num=4)
         if episode % 5 == 0:
             print(f"[Episode {episode}] Loss: {loss.item():.4f} | Accuracy: {acc*100:.2f}% | Task: {task}")
 
-# --------- Inference on a Graph -----------------------
-def proto_predict(encoder, support_set, query_graph):
-    encoder.eval()
-    support_x, support_y = [], []
 
-    for g in support_set:
-        g = g.to(DEVICE)
-        emb = encoder(g.x, g.edge_index, g.edge_attr)
-        support_x.append(emb)
-        support_y.append(g.y)
-
-    support_x = torch.cat(support_x, dim=0)
-    support_y = torch.cat(support_y, dim=0)
-    prototypes = compute_prototypes(support_x, support_y)
-
-    query = query_graph.to(DEVICE)
-    query_emb = encoder(query.x, query.edge_index, query.edge_attr)
-    dists = euclidean_distance(query_emb, prototypes)
-    preds = dists.argmin(dim=1)
-    return preds.cpu()
 
 # # --------- Example Runner -----------------------------
 print("Loading few-shot dataset...")
-data_list = torch.load("data/training_data/training_dataset.pt", map_location=DEVICE, weights_only=False)  # please replace this path with your desired location
+data_list = torch.load("data/training_data/training_dataset_05.pt", map_location=DEVICE, weights_only=False)  # please replace this path with your desired location
 
 encoder = GATEncoder().to(DEVICE)
 optimizer = torch.optim.Adam(encoder.parameters(), lr=1e-3)
@@ -126,4 +107,4 @@ print("Starting ProtoNet training...")
 proto_train(data_list, encoder, optimizer, n_episodes=250)
 
 print("Saving trained encoder...")
-torch.save(encoder.state_dict(), "models/prototypical/proto_gat_encoder.pt")
+torch.save(encoder.state_dict(), "models/proto_gat_encoder_05.pt") # please replace this path with your desired location

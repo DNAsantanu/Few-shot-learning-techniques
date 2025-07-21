@@ -12,7 +12,7 @@ import random
 from torch_geometric.data import Data
 from torch_geometric.loader import DataLoader
 from torch_geometric.nn import GAT
-# from proto_gat_main import GATEncoder, compute_prototypes, euclidean_distance
+
 
 IN_CHANNELS = 18
 OUT_CLASSES = 4
@@ -104,13 +104,13 @@ def evaluate_single_graph(graph_path, model_path, support_ratio=0.2):
                 all_preds.append(preds)
                 all_trues.append(g.y.cpu())
 
-                value_indices = (preds == 1).nonzero(as_tuple=True)[0].tolist()
-                print(f"\n Graph {i+1} Predictions:")
-                print(preds.tolist())
-                print(f" Predicted VALUE nodes: {value_indices}")
-
-                # Per-label accuracy for this query graph
+                print(f" Graph {i+1} Evaluation")
+                print("Predicted labels: ", preds.tolist())
+                print("True labels     : ", g.y.tolist())
                 print(classification_report(g.y.cpu(), preds, zero_division=0))
+
+
+                
 
         # Overall classification report across all query graphs
         all_preds_flat = torch.cat(all_preds).numpy()
@@ -152,12 +152,13 @@ def evaluate_single_graph(graph_path, model_path, support_ratio=0.2):
         all_preds.append(preds)
         all_trues.append(query_y.cpu())
 
-        print(f"Evaluation Completed on Single Graph")
-        print(f"Predicted labels: {preds.tolist()}")
-        print(f"True labels: {query_y.tolist()}")
 
-        # Per-label accuracy for this query set
+        print(" Evaluation Completed on Single Graph")
+        print("Predicted labels: ", preds.tolist())
+        print("True labels     : ", query_y.tolist())
         print(classification_report(query_y, preds, zero_division=0))
+
+
 
         # Overall (just this graph)
         all_preds_flat = torch.cat(all_preds).numpy()
@@ -171,7 +172,7 @@ def evaluate_single_graph(graph_path, model_path, support_ratio=0.2):
 # --------- Main ---------
 if __name__ == "__main__":
     evaluate_single_graph(
-        graph_path="data/test_data/test_dataset_loan.pt",
-        model_path="models/prototypical/proto_gat_encoder.pt",
-        support_ratio=0.2
+        graph_path="data/test_data/test_dataset_PR2.pt",
+        model_path="models/proto_gat_encoder_05.pt",
+        support_ratio=0.6
     )

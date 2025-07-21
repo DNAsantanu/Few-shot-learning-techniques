@@ -58,7 +58,7 @@ def evaluate_model(data_list, model_path):
     all_preds, all_trues = [], []
 
     for task in tasks:
-        support_set, query_set = sample_episode(data_list, task, k_shot=1, q_num=4)
+        support_set, query_set = sample_episode(data_list, task, k_shot=2, q_num=3)
 
         for query_doc in query_set:
             pred, true = maml_infer(model, support_set, query_doc, optimizer)
@@ -96,5 +96,5 @@ def evaluate_model(data_list, model_path):
 
  
 if __name__ == "__main__":
-    data_list = torch.load("data/test_data/test_dataset_01(Invoice).pt", map_location=DEVICE)
-    evaluate_model(data_list, model_path="models/maml_gat_model_01.pt")
+    data_list = torch.load("data/test_data/test_dataset_PR2.pt", map_location=DEVICE)
+    evaluate_model(data_list, model_path="models/maml_gat_model_05.pt")

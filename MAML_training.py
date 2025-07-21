@@ -70,7 +70,7 @@ def maml_train(data_list, model, optimizer, inner_steps=1, n_episodes=500, pretr
 # --------- Main Runner -----------------
 if __name__ == "__main__":
     print(" Loading few-shot dataset...")
-    data_list = torch.load("data/training_data/training_dataset_01.pt", map_location=DEVICE, weights_only=False)
+    data_list = torch.load("data/training_data/training_dataset_05.pt", map_location=DEVICE, weights_only=False)
 
     model = build_gat_model()
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
@@ -79,4 +79,4 @@ if __name__ == "__main__":
     maml_train(data_list, model, optimizer, inner_steps=1, n_episodes=500)
 
     print(" Saving MAML-trained model...")
-    torch.save(model.state_dict(), "models/maml_gat_model_01.pt")
+    torch.save(model.state_dict(), "models/maml_gat_model_05.pt")
